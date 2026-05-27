@@ -1,0 +1,2 @@
+# ComponentBid
+OOP team task
