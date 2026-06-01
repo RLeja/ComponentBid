@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html   lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>ComponentBid</title>
+</head>
+<body>
+
+<div sec:authorize="isAnonymous()">
+
+    <a th:href="@{/register}">
+        Register
+    </a>
+
+    <a th:href="@{/login}">
+        Login
+    </a>
+</div>
+
+<div sec:authorize="isAuthenticated()">
+
+    <a th:href="@{/auctions/create}">
+        Create Auction
+    </a>
+
+    <a th:href="@{/users/profile}">
+        My Profile
+    </a>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">
+            Logout
+        </button>
+    </form>
+
+</div>
+
+<h1>Available Auctions</h1>
+
+<form method="get">
+
+    <label for="categoryId"></label>
+    <select name="categoryId" id="categoryId">
+        <option value="">All Categories</option>
+        <option th:each="category : ${categories}"
+                th:value="${category.categoryId}"
+                th:text="${category.categoryName}"
+                th:selected="${category.categoryId == selectedCategoryId}">
+        </option>
+    </select>
+
+    <label for="conditionId"></label>
+    <select name="conditionId" id="conditionId">
+        <option value="">All Conditions</option>
+        <option th:each="condition : ${conditions}"
+                th:value="${condition.conditionId}"
+                th:text="${condition.conditionName}"
+                th:selected="${condition.conditionId == selectedConditionId}">
+        </option>
+    </select>
+
+    <label for="manufacturerId"></label>
+    <select name="manufacturerId" id="manufacturerId">
+        <option value="">All Manufacturers</option>
+        <option th:each="manufacturer : ${manufacturers}"
+                th:value="${manufacturer.manufacturerId}"
+                th:text="${manufacturer.manufacturerName}"
+                th:selected="${manufacturer.manufacturerId == selectedManufacturerId}">
+        </option>
+    </select>
+
+    <button type="submit">Filter</button>
+
+</form>
+
+
+<div th:if="${#lists.isEmpty(auctions)}">
+    No auctions found.
+</div>
+
+<div th:each="auction : ${auctions}">
+    <a th:href="@{/auctions/{id}(id=${auction.id})}">
+        <h2 th:text="${auction.title}"></h2>
+    </a>
+
+    <p>
+        Description:
+        <span th:text="${auction.description}"></span>
+    </p>
+
+    <p>
+        Category:
+        <span th:text="${auction.category.getCategoryName()}"></span>
+    </p>
+
+    <p>
+        Starting Price:
+        <span th:text="${auction.startPrice}"></span>
+    </p>
+
+    <hr>
+</div>
+
+</body>
+</html>

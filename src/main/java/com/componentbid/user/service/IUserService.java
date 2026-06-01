@@ -1,9 +1,12 @@
 package com.componentbid.user.service;
 
-import com.componentbid.user.dto.CreateUserRequest;
+import com.componentbid.user.dto.RegisterRequest;
 import com.componentbid.user.entity.User;
 
+import java.util.UUID;
+
 public interface IUserService {
-    User createUser(CreateUserRequest request);
+    User register(RegisterRequest request);
     User findByEmail(String email);
+    User getById(UUID id);
 }

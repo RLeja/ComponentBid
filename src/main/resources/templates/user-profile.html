@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+</head>
+<body>
+<h1 th:text="${user.name}"></h1>
+
+<p>
+    Rating:
+    <span th:text="${user.averageRating}"></span>
+</p>
+
+<p>
+    Email:
+    <span th:text="${user.email}"></span>
+</p>
+
+<h2>Created Auctions</h2>
+
+<table>
+
+    <tr>
+        <th>Title</th>
+        <th>Status</th>
+    </tr>
+
+    <tr th:each="auction : ${auctions}">
+
+        <td>
+            <a th:href="@{/auctions/{id}(id=${auction.id})}"
+               th:text="${auction.title}">
+            </a>
+        </td>
+
+        <td th:text="${auction.currentStatus}">
+        </td>
+
+    </tr>
+
+</table>
+
+<h2>Bids</h2>
+
+<table>
+
+    <tr>
+        <th>Auction</th>
+        <th>Time</th>
+        <th>Sum</th>
+    </tr>
+
+    <tr th:each="bid : ${bids}">
+
+        <td>
+            <a th:href="@{/auctions/{id}(id=${bid.auction.id})}"
+               th:text="${bid.auction.title}">
+            </a>
+        </td>
+
+        <td th:text="${bid.createdAt}">
+        </td>
+
+        <td th:text="${bid.sum}">
+        </td>
+
+    </tr>
+
+</table>
+
+<h2>Written Reviews</h2>
+
+<div th:each="wReview : ${writtenReviews}">
+
+    <p>
+        For:
+        <a th:href="@{/users/{id}(id=${wReview.seller.id})}"
+           th:text="${wReview.seller.name}">
+        </a>
+    </p>
+
+    <p>
+        Rating:
+        <span th:text="${wReview.rating}"></span>
+        / 5
+    </p>
+
+    <p th:text="${wReview.comment}">
+    </p>
+
+    <hr>
+
+</div>
+
+<h2>Received Reviews</h2>
+
+<div th:each="rReview : ${receivedReviews}">
+
+    <p>
+        Rating:
+        <span th:text="${rReview.rating}"></span>
+        / 5
+    </p>
+
+    <p th:text="${rReview.comment}">
+    </p>
+
+    <hr>
+
+</div>
+</body>
+</html>
