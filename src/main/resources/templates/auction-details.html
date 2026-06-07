@@ -47,6 +47,11 @@
 
 <h1 th:text="${auction.title}"></h1>
 
+<img th:each="imageUrl : ${auction.imageUrls}"
+     th:src="@{${imageUrl}}"
+     style="max-width: 300px;"
+     alt="bid-image">
+
 <p>
     <strong>Description:</strong>
     <span th:text="${auction.description}"></span>
@@ -54,17 +59,17 @@
 
 <p>
     <strong>Category:</strong>
-    <span th:text="${auction.category.categoryName}"></span>
+    <span th:text="${auction.categoryName}"></span>
 </p>
 
 <p>
     <strong>Manufacturer:</strong>
-    <span th:text="${auction.manufacturer.manufacturerName}"></span>
+    <span th:text="${auction.manufacturerName}"></span>
 </p>
 
 <p>
     <strong>Condition:</strong>
-    <span th:text="${auction.condition.conditionName}"></span>
+    <span th:text="${auction.conditionName}"></span>
 </p>
 
 <p>
@@ -74,8 +79,8 @@
 
 <p>
     <strong>Seller:</strong>
-    <a th:href="@{/users/{id}(id=${auction.user.id})}"
-       th:text="${auction.user.name}">
+    <a th:href="@{/users/{id}(id=${auction.sellerId})}"
+       th:text="${auction.sellerName}">
     </a>
 </p>
 

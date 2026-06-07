@@ -60,7 +60,6 @@ public class UserService implements IUserService {
     }
     @Override
     public User getById(UUID id) {
-
         return userRepository.findById(id)
                 .orElseThrow();
     }

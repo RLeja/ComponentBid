@@ -1,5 +1,6 @@
 package com.componentbid.auction.entity;
 
+import com.componentbid.file.entity.FileMetadata;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,7 +58,13 @@ public class Auction {
     @Column(nullable = false)
     private LocalDateTime endDate;
 
-    private String imageUrl;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "auction_image",
+            joinColumns = @JoinColumn(name = "auction_id"),
+            inverseJoinColumns = @JoinColumn(name = "fileMetadata_id")
+    )
+    private Collection<FileMetadata> images;
 
     @OneToMany(mappedBy = "auction")
     private List<Bid> bids = new ArrayList<>();

@@ -45,6 +45,7 @@
 
 <form th:action="@{/auctions/create}"
       th:object="${auction}"
+      enctype="multipart/form-data"
       method="post">
 
     <label for="title">Title</label>
@@ -81,11 +82,16 @@
          th:errors="*{startPrice}">
     </div>
 
-    <label for="imageUrl">Picture URL</label>
-    <input id="imageUrl"
-           type="url"
-           th:field="*{imageUrl}"
-           placeholder="https://example.com/component.jpg">
+<!--    <label for="imageUrl">Picture URL</label>-->
+<!--    <input id="imageUrl"-->
+<!--           type="url"-->
+<!--           th:field="*{imageUrl}"-->
+<!--           placeholder="https://example.com/component.jpg">-->
+
+    <input type="file"
+           th:field="*{images}"
+           multiple
+           accept="image/*">
 
     <label for="category">Category</label>
     <select id="category"

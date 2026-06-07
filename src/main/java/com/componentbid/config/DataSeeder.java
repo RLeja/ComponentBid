@@ -309,7 +309,7 @@ public class DataSeeder implements CommandLineRunner {
 
         auction.setTitle(title);
         auction.setDescription(description);
-        auction.setImageUrl(defaultAuctionImageUrl(title));
+        //auction.setImageUrl(defaultAuctionImageUrl(title));
         auction.setCategory(category);
         auction.setManufacturer(manufacturer);
         auction.setCondition(condition);

@@ -1,7 +1,6 @@
 package com.componentbid.auction.web;
 
 import com.componentbid.auction.dto.AuctionCreateRequest;
-import com.componentbid.auction.entity.Auction;
 import com.componentbid.auction.repository.CategoryRepository;
 import com.componentbid.auction.repository.ItemConditionRepository;
 import com.componentbid.auction.repository.ManufacturerRepository;
@@ -11,7 +10,6 @@ import com.componentbid.bid.repository.BidRepository;
 import com.componentbid.review.dto.ReviewCreateRequest;
 import com.componentbid.review.service.ReviewService;
 import com.componentbid.user.entity.CustomUserDetails;
-import com.componentbid.user.entity.User;
 import com.componentbid.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -53,36 +51,15 @@ public class AuctionController {
     }
 
     @GetMapping("/{id}")
-    public String details(
-            @PathVariable UUID id,
-            Model model,
-            @AuthenticationPrincipal CustomUserDetails currentUser) {
+    public String getDetails(@PathVariable UUID id, Model model, @AuthenticationPrincipal CustomUserDetails currentUser) {
 
-        if (currentUser != null) {
+        var auctionDetails = auctionService.getAuctionDetails(id);
 
-            model.addAttribute(
-                    "canReview",
-                    reviewService.canReview(
-                            id,
-                            currentUser.getUser().getId()
-                    )
-            );
-
-        } else {
-
-            model.addAttribute(
-                    "canReview",
-                    false
-            );
-        }
-
-        Auction auction = auctionService.getAuctionById(id);
-
-        model.addAttribute("auction", auction);
+        model.addAttribute("auction", auctionDetails);
 
         model.addAttribute(
                 "bids",
-                bidRepository.findByAuction_IdOrderBySumDesc(id)
+                bidRepository.findByAuction_IdOrderBySumDesc(id) //TODO: map in service
         );
 
         if (!model.containsAttribute("bidCreateRequest")) {
@@ -99,8 +76,12 @@ public class AuctionController {
             );
         }
 
+        var canReview = currentUser != null && reviewService.canReview(id, currentUser.getUser().getId());
+        model.addAttribute("canReview", canReview);
+
         return "auction-details";
     }
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String createAuction(
