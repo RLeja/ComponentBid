@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -58,8 +59,10 @@ public class SecurityConfig {
                                 "/",
                                 "/register",
                                 "/login",
-                                "/css/**"
+                                "/styles.css"
                         ).permitAll()
+
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 
                         .requestMatchers(
                                 HttpMethod.GET,
@@ -80,9 +83,10 @@ public class SecurityConfig {
 
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .permitAll());
+                        .permitAll())
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.disable()));
 
         return http.build();
     }
 }
-
