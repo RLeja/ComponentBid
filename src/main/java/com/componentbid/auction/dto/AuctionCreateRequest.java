@@ -31,6 +31,8 @@ public class AuctionCreateRequest {
     @NotNull
     private BigDecimal startPrice;
 
+    private String imageUrl;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @NotNull
     private LocalDateTime startDate;

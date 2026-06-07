@@ -24,6 +24,12 @@
            th:field="*{startPrice}"
            required>
 
+    <label for="imageUrl">Picture URL</label>
+    <input id="imageUrl"
+           type="url"
+           th:field="*{imageUrl}"
+           placeholder="https://example.com/component.jpg">
+
     <label for="category">Category</label>
     <select id="category" th:field="*{categoryId}">
         <option value="">Select Category</option>

@@ -55,6 +55,7 @@ public class AuctionService implements IAuctionService {
         auction.setTitle(request.getTitle());
         auction.setDescription(request.getDescription());
         auction.setStartPrice(request.getStartPrice());
+        auction.setImageUrl(request.getImageUrl());
 
         auction.setCategory(category);
         auction.setManufacturer(manufacturer);
