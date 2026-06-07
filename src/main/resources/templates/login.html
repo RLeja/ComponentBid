@@ -2,69 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
-    <style>
-        label,
-        input {
-            display: block;
-            margin-top: 10px;
-        }
-
-        .alert {
-            padding: 10px 12px;
-            margin: 12px 0;
-            border-radius: 6px;
-        }
-
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        .alert-success {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
-<body>
-<div class="alert alert-success"
-     th:if="${successMessage}"
-     th:text="${successMessage}">
-</div>
+<body class="auth-page">
+<main class="auth-panel">
+    <a class="brand" th:href="@{/}">
+        <span class="brand-mark">CB</span>
+        <span>ComponentBid</span>
+    </a>
 
-<div class="alert alert-success"
-     th:if="${param.logout}">
-    You have been logged out.
-</div>
+    <div class="alert alert-success"
+         th:if="${successMessage}"
+         th:text="${successMessage}">
+    </div>
 
-<div class="alert alert-error"
-     th:if="${param.error}">
-    Invalid email or password.
-</div>
+    <div class="alert alert-success"
+         th:if="${param.logout}">
+        You have been logged out.
+    </div>
 
-<form th:action="@{/login}"
-      method="post">
+    <div class="alert alert-error"
+         th:if="${param.error}">
+        Invalid email or password.
+    </div>
 
-    <label for="username">Username:</label>
-    <input
-            id="username"
-            name="username"
-            placeholder="Email">
+    <section class="hero">
+        <p class="eyebrow">Welcome back</p>
+        <h1>Login</h1>
+    </section>
 
-    <label for="password">Password:</label>
-    <input
-            id="password"
-            type="password"
-            name="password"
-            placeholder="Password">
+    <form class="form-grid" th:action="@{/login}"
+          method="post">
 
-    <button type="submit">
-        Login
-    </button>
+        <label class="span-2" for="username">
+            Email
+            <input
+                    id="username"
+                    name="username"
+                    placeholder="Email">
+        </label>
 
-</form>
+        <label class="span-2" for="password">
+            Password
+            <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    placeholder="Password">
+        </label>
+
+        <button class="full span-2" type="submit">
+            Login
+        </button>
+
+    </form>
+</main>
 </body>
 </html>

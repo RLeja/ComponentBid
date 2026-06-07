@@ -3,104 +3,108 @@
         xmlns:th="http://www.thymeleaf.org"
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ComponentBid</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
 
-<div sec:authorize="isAnonymous()">
+<main class="app-shell">
+    <header class="topbar">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">CB</span>
+            <span>ComponentBid</span>
+        </a>
 
-    <a th:href="@{/register}">
-        Register
-    </a>
+        <nav class="nav-actions" sec:authorize="isAnonymous()">
+            <a class="button secondary" th:href="@{/login}">Login</a>
+            <a class="button" th:href="@{/register}">Register</a>
+        </nav>
 
-    <a th:href="@{/login}">
-        Login
-    </a>
-</div>
+        <div class="nav-actions" sec:authorize="isAuthenticated()">
+            <a class="button" th:href="@{/auctions/create}">Create Auction</a>
+            <a class="button secondary" th:href="@{/users/profile}">My Profile</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button class="secondary" type="submit">Logout</button>
+            </form>
+        </div>
+    </header>
 
-<div sec:authorize="isAuthenticated()">
+    <section class="hero">
+        <p class="eyebrow">Electronic components marketplace</p>
+        <h1>Available Auctions</h1>
+        <p>Find components by category, condition, and manufacturer.</p>
+    </section>
 
-    <a th:href="@{/auctions/create}">
-        Create Auction
-    </a>
+    <form class="panel filter-form" method="get">
 
-    <a th:href="@{/users/profile}">
-        My Profile
-    </a>
+        <label for="categoryId">
+            Category
+            <select name="categoryId" id="categoryId">
+                <option value="">All Categories</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.categoryId}"
+                        th:text="${category.categoryName}"
+                        th:selected="${category.categoryId == selectedCategoryId}">
+                </option>
+            </select>
+        </label>
 
-    <form th:action="@{/logout}" method="post">
-        <button type="submit">
-            Logout
-        </button>
+        <label for="conditionId">
+            Condition
+            <select name="conditionId" id="conditionId">
+                <option value="">All Conditions</option>
+                <option th:each="condition : ${conditions}"
+                        th:value="${condition.conditionId}"
+                        th:text="${condition.conditionName}"
+                        th:selected="${condition.conditionId == selectedConditionId}">
+                </option>
+            </select>
+        </label>
+
+        <label for="manufacturerId">
+            Manufacturer
+            <select name="manufacturerId" id="manufacturerId">
+                <option value="">All Manufacturers</option>
+                <option th:each="manufacturer : ${manufacturers}"
+                        th:value="${manufacturer.manufacturerId}"
+                        th:text="${manufacturer.manufacturerName}"
+                        th:selected="${manufacturer.manufacturerId == selectedManufacturerId}">
+                </option>
+            </select>
+        </label>
+
+        <button type="submit">Filter</button>
+
     </form>
 
-</div>
+    <div class="empty-state" th:if="${#lists.isEmpty(auctions)}">
+        No auctions found.
+    </div>
 
-<h1>Available Auctions</h1>
+    <section class="auction-grid" th:unless="${#lists.isEmpty(auctions)}">
+        <article class="auction-card" th:each="auction : ${auctions}">
+            <a th:href="@{/auctions/{id}(id=${auction.id})}">
+                <h2 th:text="${auction.title}"></h2>
+            </a>
 
-<form method="get">
+            <p class="muted" th:text="${auction.description}"></p>
 
-    <label for="categoryId"></label>
-    <select name="categoryId" id="categoryId">
-        <option value="">All Categories</option>
-        <option th:each="category : ${categories}"
-                th:value="${category.categoryId}"
-                th:text="${category.categoryName}"
-                th:selected="${category.categoryId == selectedCategoryId}">
-        </option>
-    </select>
+            <div class="meta-grid">
+                <p class="meta-item">
+                    <span class="meta-label">Category</span>
+                    <span class="meta-value" th:text="${auction.category.getCategoryName()}"></span>
+                </p>
 
-    <label for="conditionId"></label>
-    <select name="conditionId" id="conditionId">
-        <option value="">All Conditions</option>
-        <option th:each="condition : ${conditions}"
-                th:value="${condition.conditionId}"
-                th:text="${condition.conditionName}"
-                th:selected="${condition.conditionId == selectedConditionId}">
-        </option>
-    </select>
-
-    <label for="manufacturerId"></label>
-    <select name="manufacturerId" id="manufacturerId">
-        <option value="">All Manufacturers</option>
-        <option th:each="manufacturer : ${manufacturers}"
-                th:value="${manufacturer.manufacturerId}"
-                th:text="${manufacturer.manufacturerName}"
-                th:selected="${manufacturer.manufacturerId == selectedManufacturerId}">
-        </option>
-    </select>
-
-    <button type="submit">Filter</button>
-
-</form>
-
-
-<div th:if="${#lists.isEmpty(auctions)}">
-    No auctions found.
-</div>
-
-<div th:each="auction : ${auctions}">
-    <a th:href="@{/auctions/{id}(id=${auction.id})}">
-        <h2 th:text="${auction.title}"></h2>
-    </a>
-
-    <p>
-        Description:
-        <span th:text="${auction.description}"></span>
-    </p>
-
-    <p>
-        Category:
-        <span th:text="${auction.category.getCategoryName()}"></span>
-    </p>
-
-    <p>
-        Starting Price:
-        <span th:text="${auction.startPrice}"></span>
-    </p>
-
-    <hr>
-</div>
+                <p class="meta-item">
+                    <span class="meta-label">Starting Price</span>
+                    <span class="meta-value" th:text="${auction.startPrice}"></span>
+                </p>
+            </div>
+        </article>
+    </section>
+</main>
 
 </body>
 </html>
