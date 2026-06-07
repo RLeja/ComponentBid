@@ -3,30 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 32px;
+            color: #1f2937;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .profile-picture {
+            width: 112px;
+            height: 112px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #d1d5db;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 28px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: middle;
+        }
+
+        .auction-picture {
+            width: 96px;
+            height: 72px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #d1d5db;
+            background: #f3f4f6;
+        }
+
+        .auction-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+    </style>
 </head>
 <body>
-<h1 th:text="${user.name}"></h1>
+<div class="profile-header">
+    <img class="profile-picture"
+         th:src="@{https://ui-avatars.com/api/(name=${user.name},background='2563eb',color='ffffff',size='224')}"
+         th:alt="${user.name + ' profile picture'}">
 
-<p>
-    Rating:
-    <span th:text="${user.averageRating}"></span>
-</p>
+    <div>
+        <h1 th:text="${user.name}"></h1>
 
-<p>
-    Email:
-    <span th:text="${user.email}"></span>
-</p>
+        <p>
+            Rating:
+            <span th:text="${user.averageRating}"></span>
+        </p>
+
+        <p>
+            Email:
+            <span th:text="${user.email}"></span>
+        </p>
+    </div>
+</div>
 
 <h2>Created Auctions</h2>
 
 <table>
 
     <tr>
+        <th>Picture</th>
         <th>Title</th>
         <th>Status</th>
     </tr>
 
     <tr th:each="auction : ${auctions}">
+
+        <td>
+            <img class="auction-picture"
+                 th:src="${#strings.isEmpty(auction.imageUrl) ? 'https://placehold.co/192x144/e5e7eb/475569?text=No+image' : auction.imageUrl}"
+                 th:alt="${auction.title + ' picture'}">
+        </td>
 
         <td>
             <a th:href="@{/auctions/{id}(id=${auction.id})}"
@@ -46,12 +112,22 @@
 <table>
 
     <tr>
+        <th>Picture</th>
         <th>Auction</th>
         <th>Time</th>
         <th>Sum</th>
     </tr>
 
     <tr th:each="bid : ${bids}">
+
+        <td>
+            <a class="auction-link"
+               th:href="@{/auctions/{id}(id=${bid.auction.id})}">
+                <img class="auction-picture"
+                     th:src="${#strings.isEmpty(bid.auction.imageUrl) ? 'https://placehold.co/192x144/e5e7eb/475569?text=No+image' : bid.auction.imageUrl}"
+                     th:alt="${bid.auction.title + ' picture'}">
+            </a>
+        </td>
 
         <td>
             <a th:href="@{/auctions/{id}(id=${bid.auction.id})}"

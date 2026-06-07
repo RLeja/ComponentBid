@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -295,6 +296,7 @@ public class DataSeeder implements CommandLineRunner {
 
         auction.setTitle(title);
         auction.setDescription(description);
+        auction.setImageUrl(defaultAuctionImageUrl(title));
         auction.setCategory(category);
         auction.setManufacturer(manufacturer);
         auction.setCondition(condition);
@@ -305,6 +307,11 @@ public class DataSeeder implements CommandLineRunner {
         auction.setCreatedAt(LocalDateTime.now());
 
         return auctionRepository.save(auction);
+    }
+
+    private String defaultAuctionImageUrl(String title) {
+        return "https://placehold.co/640x480/f8fafc/1f2937?text=" +
+                URLEncoder.encode(title, StandardCharsets.UTF_8);
     }
 
     private void createBid(
