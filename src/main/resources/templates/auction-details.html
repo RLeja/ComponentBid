@@ -79,8 +79,8 @@
 
 <p>
     <strong>Seller:</strong>
-    <a th:href="@{/users/{id}(id=${auction.sellerId})}"
-       th:text="${auction.sellerName}">
+    <a th:href="@{/users/{id}(id=${auction.seller.id})}"
+       th:text="${auction.seller.name}">
     </a>
 </p>
 
@@ -181,10 +181,10 @@
         <th>Time</th>
     </tr>
 
-    <tr th:each="bid : ${bids}">
+    <tr th:each="bid : ${auction.bids}">
         <td>
-            <a th:href="@{/users/{id}(id=${bid.user.id})}"
-               th:text="${bid.user.name}">
+            <a th:href="@{/users/{id}(id=${bid.bidder.id})}"
+               th:text="${bid.bidder.name}">
             </a>
         </td>
         <td th:text="${bid.sum}"></td>

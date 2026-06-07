@@ -1,5 +1,7 @@
 package com.componentbid.auction.dto;
 
+import com.componentbid.bid.dto.BidDto;
+import com.componentbid.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,8 +29,8 @@ public class AuctionDetailsDto {
 
     private boolean active;
 
-    private UUID sellerId;
-    private String sellerName;
+    private UserDto seller;
 
     private Collection<String> imageUrls;
+    private Collection<BidDto> bids;
 }

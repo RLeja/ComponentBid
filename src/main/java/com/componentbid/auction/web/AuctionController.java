@@ -29,7 +29,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuctionController {
     private final AuctionService auctionService;
-    private final BidRepository bidRepository;
 
     private final CategoryRepository categoryRepository;
     private final ManufacturerRepository manufacturerRepository;
@@ -56,11 +55,6 @@ public class AuctionController {
         var auctionDetails = auctionService.getAuctionDetails(id);
 
         model.addAttribute("auction", auctionDetails);
-
-        model.addAttribute(
-                "bids",
-                bidRepository.findByAuction_IdOrderBySumDesc(id) //TODO: map in service
-        );
 
         if (!model.containsAttribute("bidCreateRequest")) {
             model.addAttribute(

@@ -3,6 +3,7 @@ package com.componentbid.auction.service;
 import com.componentbid.auction.dto.AuctionCreateRequest;
 import com.componentbid.auction.dto.AuctionDetailsDto;
 import com.componentbid.auction.entity.*;
+import com.componentbid.auction.mapper.AuctionMapper;
 import com.componentbid.auction.repository.AuctionRepository;
 import com.componentbid.auction.repository.CategoryRepository;
 import com.componentbid.auction.repository.ItemConditionRepository;
@@ -116,25 +117,6 @@ public class AuctionService implements IAuctionService {
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
 
-        return AuctionDetailsDto.builder() //TODO: Refactor to mapper
-                .id(auction.getId())
-                .title(auction.getTitle())
-                .description(auction.getDescription())
-                .categoryName(auction.getCategory().getCategoryName())
-                .manufacturerName(auction.getManufacturer().getManufacturerName())
-                .conditionName(auction.getCondition().getConditionName())
-                .startPrice(auction.getStartPrice())
-                .startDate(auction.getStartDate())
-                .endDate(auction.getEndDate())
-                .active(auction.isActive())
-                .sellerId(auction.getUser().getId())
-                .sellerName(auction.getUser().getName())
-                .imageUrls(
-                        auction.getImages()
-                                .stream()
-                                .map(image -> "/files/" + image.getId())
-                                .toList()
-                )
-                .build();
+        return AuctionMapper.projectDetails(auction);
     }
 }
