@@ -3,17 +3,17 @@ package com.componentbid.review.web;
 import com.componentbid.review.dto.ReviewCreateRequest;
 import com.componentbid.review.service.ReviewService;
 import com.componentbid.user.entity.CustomUserDetails;
-import com.componentbid.user.entity.User;
-import com.componentbid.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -23,27 +23,54 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
-    private final UserRepository userRepository;
 
     @PostMapping
     public String createReview(
             @PathVariable UUID auctionId,
-            @Valid @ModelAttribute ReviewCreateRequest request,
+            @Valid @ModelAttribute("reviewCreateRequest") ReviewCreateRequest request,
+            BindingResult bindingResult,
             @AuthenticationPrincipal
-            CustomUserDetails currentUser) {
+            CustomUserDetails currentUser,
+            RedirectAttributes redirectAttributes) {
 
-//        User currentUser =
-//                userRepository
-//                        .findByEmail(
-//                                "john@example.com"
-//                        )
-//                        .orElseThrow();
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.reviewCreateRequest",
+                    bindingResult
+            );
+            redirectAttributes.addFlashAttribute(
+                    "reviewCreateRequest",
+                    request
+            );
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "Please fix the review fields."
+            );
 
-        reviewService.createReview(
-                auctionId,
-                currentUser.getUser().getId(),
-                request
-        );
+            return "redirect:/auctions/" + auctionId;
+        }
+
+        try {
+            reviewService.createReview(
+                    auctionId,
+                    currentUser.getUser().getId(),
+                    request
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Review submitted successfully."
+            );
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            redirectAttributes.addFlashAttribute(
+                    "reviewCreateRequest",
+                    request
+            );
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    exception.getMessage()
+            );
+        }
 
         return "redirect:/auctions/" + auctionId;
     }

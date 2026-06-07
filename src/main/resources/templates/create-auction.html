@@ -2,60 +2,151 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Create Auction</title>
+    <style>
+        label,
+        input,
+        textarea,
+        select {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .alert {
+            padding: 10px 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .field-error {
+            color: #b91c1c;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .input-error {
+            border: 1px solid #dc2626;
+        }
+    </style>
 </head>
 <body>
 
 <h1>Create Auction</h1>
+
+<div class="alert alert-error"
+     th:if="${errorMessage}"
+     th:text="${errorMessage}">
+</div>
 
 <form th:action="@{/auctions/create}"
       th:object="${auction}"
       method="post">
 
     <label for="title">Title</label>
-    <input id="title" type="text" th:field="*{title}" required>
+    <input id="title"
+           type="text"
+           th:field="*{title}"
+           th:errorclass="input-error"
+           required>
+    <div class="field-error"
+         th:if="${#fields.hasErrors('title')}"
+         th:errors="*{title}">
+    </div>
 
     <label for="desc">Description</label>
-    <textarea id="desc" th:field="*{description}"></textarea>
+    <textarea id="desc"
+              th:field="*{description}"
+              th:errorclass="input-error">
+    </textarea>
+    <div class="field-error"
+         th:if="${#fields.hasErrors('description')}"
+         th:errors="*{description}">
+    </div>
 
     <label for="startPrice">Starting Price</label>
     <input id="startPrice"
            type="number"
            step="0.01"
+           min="0.01"
            th:field="*{startPrice}"
+           th:errorclass="input-error"
            required>
+    <div class="field-error"
+         th:if="${#fields.hasErrors('startPrice')}"
+         th:errors="*{startPrice}">
+    </div>
 
     <label for="category">Category</label>
-    <select id="category" th:field="*{categoryId}">
+    <select id="category"
+            th:field="*{categoryId}"
+            th:errorclass="input-error">
         <option value="">Select Category</option>
         <option th:each="category : ${categories}"
                 th:value="${category.categoryId}"
                 th:text="${category.categoryName}">
         </option>
     </select>
+    <div class="field-error"
+         th:if="${#fields.hasErrors('categoryId')}"
+         th:errors="*{categoryId}">
+    </div>
 
     <label for="manufacturer">Manufacturer</label>
-    <select id="manufacturer" th:field="*{manufacturerId}">
+    <select id="manufacturer"
+            th:field="*{manufacturerId}"
+            th:errorclass="input-error">
         <option value="">Select Manufacturer</option>
         <option th:each="manufacturer : ${manufacturers}"
                 th:value="${manufacturer.manufacturerId}"
                 th:text="${manufacturer.manufacturerName}">
         </option>
     </select>
+    <div class="field-error"
+         th:if="${#fields.hasErrors('manufacturerId')}"
+         th:errors="*{manufacturerId}">
+    </div>
 
     <label for="condition">Condition</label>
-    <select id="condition" th:field="*{conditionId}">
+    <select id="condition"
+            th:field="*{conditionId}"
+            th:errorclass="input-error">
         <option value="">Select Condition</option>
         <option th:each="condition : ${conditions}"
                 th:value="${condition.conditionId}"
                 th:text="${condition.conditionName}">
         </option>
     </select>
+    <div class="field-error"
+         th:if="${#fields.hasErrors('conditionId')}"
+         th:errors="*{conditionId}">
+    </div>
 
     <label for="start">Start Date</label>
-    <input id="start" type="datetime-local" th:field="*{startDate}" required>
+    <input id="start"
+           type="datetime-local"
+           th:field="*{startDate}"
+           th:errorclass="input-error"
+           required>
+    <div class="field-error"
+         th:if="${#fields.hasErrors('startDate')}"
+         th:errors="*{startDate}">
+    </div>
 
     <label for="end">End Date</label>
-    <input id="end" type="datetime-local" th:field="*{endDate}" required>
+    <input id="end"
+           type="datetime-local"
+           th:field="*{endDate}"
+           th:errorclass="input-error"
+           required>
+    <div class="field-error"
+         th:if="${#fields.hasErrors('endDate')}"
+         th:errors="*{endDate}">
+    </div>
 
     <button type="submit">
         Create Auction
