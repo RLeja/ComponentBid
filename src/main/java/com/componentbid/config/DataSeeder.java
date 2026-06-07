@@ -14,6 +14,7 @@ import com.componentbid.review.entity.Review;
 import com.componentbid.review.repository.ReviewRepository;
 import com.componentbid.user.entity.Role;
 import com.componentbid.user.entity.User;
+import com.componentbid.user.entity.UserRole;
 import com.componentbid.user.entity.UserStatus;
 import com.componentbid.user.repository.RoleRepository;
 import com.componentbid.user.repository.UserRepository;
@@ -59,9 +60,14 @@ public class DataSeeder implements CommandLineRunner {
         // ROLES
 
         Role userRole = new Role();
-        userRole.setName("USER");
+        userRole.setName(UserRole.USER);
 
         roleRepository.save(userRole);
+
+        Role adminRole = new Role();
+        adminRole.setName(UserRole.ADMIN);
+
+        roleRepository.save(adminRole);
 
         // CATEGORIES
 
@@ -86,6 +92,13 @@ public class DataSeeder implements CommandLineRunner {
         ItemCondition used = createCondition("Used");
 
         // USERS
+
+        User eriks = createUser(
+                "eriks@punculs.com",
+                "Eriks",
+                0,
+                adminRole
+        );
 
         User john = createUser(
                 "john@example.com",

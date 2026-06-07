@@ -2,6 +2,7 @@ package com.componentbid.user.service;
 
 import com.componentbid.review.repository.ReviewRepository;
 import com.componentbid.user.entity.Role;
+import com.componentbid.user.entity.UserRole;
 import com.componentbid.user.repository.RoleRepository;
 import com.componentbid.user.repository.UserRepository;
 import com.componentbid.user.dto.RegisterRequest;
@@ -41,7 +42,7 @@ public class UserService implements IUserService {
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
         Role userRole = roleRepository
-                .findByName("USER")
+                .findByName(UserRole.USER)
                 .orElseThrow();
         user.setRoles(List.of(userRole));
 
