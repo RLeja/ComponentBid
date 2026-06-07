@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<main class="app-shell">
+    <header class="topbar">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">CB</span>
+            <span>ComponentBid</span>
+        </a>
+        <nav class="nav-actions">
+            <a class="button secondary" th:href="@{/users/profile}">Back to Profile</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <p class="eyebrow">Account settings</p>
+        <h1>Edit Profile</h1>
+        <p>Update the public name and email address for your account.</p>
+    </section>
+
+    <div class="alert alert-error"
+         th:if="${errorMessage}"
+         th:text="${errorMessage}">
+    </div>
+
+    <form class="panel form-grid"
+          th:action="@{/users/profile/edit}"
+          th:object="${profileUpdateRequest}"
+          method="post">
+
+        <label class="span-2" for="name">
+            Name
+            <input id="name"
+                   type="text"
+                   th:field="*{name}"
+                   th:errorclass="input-error"
+                   required>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('name')}"
+                  th:errors="*{name}">
+            </span>
+        </label>
+
+        <label class="span-2" for="email">
+            Email
+            <input id="email"
+                   type="email"
+                   th:field="*{email}"
+                   th:errorclass="input-error"
+                   required>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('email')}"
+                  th:errors="*{email}">
+            </span>
+        </label>
+
+        <div class="span-2 nav-actions">
+            <button type="submit">Save Changes</button>
+            <a class="button secondary" th:href="@{/users/profile}">Cancel</a>
+        </div>
+
+    </form>
+</main>
+</body>
+</html>

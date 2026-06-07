@@ -1,6 +1,7 @@
 package com.componentbid.user.service;
 
 import com.componentbid.review.repository.ReviewRepository;
+import com.componentbid.user.dto.UserProfileUpdateRequest;
 import com.componentbid.user.entity.Role;
 import com.componentbid.user.entity.UserRole;
 import com.componentbid.user.repository.RoleRepository;
@@ -62,5 +63,21 @@ public class UserService implements IUserService {
     public User getById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow();
+    }
+
+    @Override
+    public User updateProfile(UUID id, UserProfileUpdateRequest request) {
+        User user = getById(id);
+
+        userRepository.findByEmail(request.getEmail())
+                .filter(existingUser -> !existingUser.getId().equals(id))
+                .ifPresent(existingUser -> {
+                    throw new IllegalStateException("Email already exists");
+                });
+
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+
+        return userRepository.save(user);
     }
 }

@@ -1,86 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Create Auction</title>
-    <style>
-        label,
-        input,
-        textarea,
-        select {
-            display: block;
-            margin-top: 10px;
-        }
-
-        .alert {
-            padding: 10px 12px;
-            margin: 12px 0;
-            border-radius: 6px;
-        }
-
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        .field-error {
-            color: #b91c1c;
-            font-size: 0.9rem;
-            margin-top: 4px;
-        }
-
-        .input-error {
-            border: 1px solid #dc2626;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
 
-<h1>Create Auction</h1>
+<main class="app-shell">
+    <header class="topbar">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">CB</span>
+            <span>ComponentBid</span>
+        </a>
+        <nav class="nav-actions">
+            <a class="button secondary" th:href="@{/}">Back to Auctions</a>
+        </nav>
+    </header>
 
-<div class="alert alert-error"
-     th:if="${errorMessage}"
-     th:text="${errorMessage}">
-</div>
+    <section class="hero">
+        <p class="eyebrow">New listing</p>
+        <h1>Create Auction</h1>
+        <p>Add the component details, images, and auction dates.</p>
+    </section>
 
-<form th:action="@{/auctions/create}"
-      th:object="${auction}"
-      enctype="multipart/form-data"
-      method="post">
-
-    <label for="title">Title</label>
-    <input id="title"
-           type="text"
-           th:field="*{title}"
-           th:errorclass="input-error"
-           required>
-    <div class="field-error"
-         th:if="${#fields.hasErrors('title')}"
-         th:errors="*{title}">
+    <div class="alert alert-error"
+         th:if="${errorMessage}"
+         th:text="${errorMessage}">
     </div>
 
-    <label for="desc">Description</label>
-    <textarea id="desc"
-              th:field="*{description}"
-              th:errorclass="input-error">
-    </textarea>
-    <div class="field-error"
-         th:if="${#fields.hasErrors('description')}"
-         th:errors="*{description}">
-    </div>
+    <form class="panel form-grid"
+          th:action="@{/auctions/create}"
+          th:object="${auction}"
+          enctype="multipart/form-data"
+          method="post">
 
-    <label for="startPrice">Starting Price</label>
-    <input id="startPrice"
-           type="number"
-           step="0.01"
-           min="0.01"
-           th:field="*{startPrice}"
-           th:errorclass="input-error"
-           required>
-    <div class="field-error"
-         th:if="${#fields.hasErrors('startPrice')}"
-         th:errors="*{startPrice}">
-    </div>
+        <label for="title">
+            Title
+            <input id="title"
+                   type="text"
+                   th:field="*{title}"
+                   th:errorclass="input-error"
+                   required>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('title')}"
+                  th:errors="*{title}">
+            </span>
+        </label>
+
+        <label for="startPrice">
+            Starting Price
+            <input id="startPrice"
+                   type="number"
+                   step="0.01"
+                   min="0.01"
+                   th:field="*{startPrice}"
+                   th:errorclass="input-error"
+                   required>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('startPrice')}"
+                  th:errors="*{startPrice}">
+            </span>
+        </label>
+
+        <label class="span-2" for="desc">
+            Description
+            <textarea id="desc"
+                      th:field="*{description}"
+                      th:errorclass="input-error">
+            </textarea>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('description')}"
+                  th:errors="*{description}">
+            </span>
+        </label>
 
 <!--    <label for="imageUrl">Picture URL</label>-->
 <!--    <input id="imageUrl"-->
@@ -88,83 +82,97 @@
 <!--           th:field="*{imageUrl}"-->
 <!--           placeholder="https://example.com/component.jpg">-->
 
-    <input type="file"
-           th:field="*{images}"
-           multiple
-           accept="image/*">
+        <label class="span-2">
+            Images
+            <input type="file"
+                   th:field="*{images}"
+                   multiple
+                   accept="image/*">
+        </label>
 
-    <label for="category">Category</label>
-    <select id="category"
-            th:field="*{categoryId}"
-            th:errorclass="input-error">
-        <option value="">Select Category</option>
-        <option th:each="category : ${categories}"
-                th:value="${category.categoryId}"
-                th:text="${category.categoryName}">
-        </option>
-    </select>
-    <div class="field-error"
-         th:if="${#fields.hasErrors('categoryId')}"
-         th:errors="*{categoryId}">
-    </div>
+        <label for="category">
+            Category
+            <select id="category"
+                    th:field="*{categoryId}"
+                    th:errorclass="input-error">
+                <option value="">Select Category</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.categoryId}"
+                        th:text="${category.categoryName}">
+                </option>
+            </select>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('categoryId')}"
+                  th:errors="*{categoryId}">
+            </span>
+        </label>
 
-    <label for="manufacturer">Manufacturer</label>
-    <select id="manufacturer"
-            th:field="*{manufacturerId}"
-            th:errorclass="input-error">
-        <option value="">Select Manufacturer</option>
-        <option th:each="manufacturer : ${manufacturers}"
-                th:value="${manufacturer.manufacturerId}"
-                th:text="${manufacturer.manufacturerName}">
-        </option>
-    </select>
-    <div class="field-error"
-         th:if="${#fields.hasErrors('manufacturerId')}"
-         th:errors="*{manufacturerId}">
-    </div>
+        <label for="manufacturer">
+            Manufacturer
+            <select id="manufacturer"
+                    th:field="*{manufacturerId}"
+                    th:errorclass="input-error">
+                <option value="">Select Manufacturer</option>
+                <option th:each="manufacturer : ${manufacturers}"
+                        th:value="${manufacturer.manufacturerId}"
+                        th:text="${manufacturer.manufacturerName}">
+                </option>
+            </select>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('manufacturerId')}"
+                  th:errors="*{manufacturerId}">
+            </span>
+        </label>
 
-    <label for="condition">Condition</label>
-    <select id="condition"
-            th:field="*{conditionId}"
-            th:errorclass="input-error">
-        <option value="">Select Condition</option>
-        <option th:each="condition : ${conditions}"
-                th:value="${condition.conditionId}"
-                th:text="${condition.conditionName}">
-        </option>
-    </select>
-    <div class="field-error"
-         th:if="${#fields.hasErrors('conditionId')}"
-         th:errors="*{conditionId}">
-    </div>
+        <label for="condition">
+            Condition
+            <select id="condition"
+                    th:field="*{conditionId}"
+                    th:errorclass="input-error">
+                <option value="">Select Condition</option>
+                <option th:each="condition : ${conditions}"
+                        th:value="${condition.conditionId}"
+                        th:text="${condition.conditionName}">
+                </option>
+            </select>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('conditionId')}"
+                  th:errors="*{conditionId}">
+            </span>
+        </label>
 
-    <label for="start">Start Date</label>
-    <input id="start"
-           type="datetime-local"
-           th:field="*{startDate}"
-           th:errorclass="input-error"
-           required>
-    <div class="field-error"
-         th:if="${#fields.hasErrors('startDate')}"
-         th:errors="*{startDate}">
-    </div>
+        <label for="start">
+            Start Date
+            <input id="start"
+                   type="datetime-local"
+                   th:field="*{startDate}"
+                   th:errorclass="input-error"
+                   required>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('startDate')}"
+                  th:errors="*{startDate}">
+            </span>
+        </label>
 
-    <label for="end">End Date</label>
-    <input id="end"
-           type="datetime-local"
-           th:field="*{endDate}"
-           th:errorclass="input-error"
-           required>
-    <div class="field-error"
-         th:if="${#fields.hasErrors('endDate')}"
-         th:errors="*{endDate}">
-    </div>
+        <label for="end">
+            End Date
+            <input id="end"
+                   type="datetime-local"
+                   th:field="*{endDate}"
+                   th:errorclass="input-error"
+                   required>
+            <span class="field-error"
+                  th:if="${#fields.hasErrors('endDate')}"
+                  th:errors="*{endDate}">
+            </span>
+        </label>
 
-    <button type="submit">
-        Create Auction
-    </button>
+        <div class="span-2">
+            <button type="submit">Create Auction</button>
+        </div>
 
-</form>
+    </form>
+</main>
 
 </body>
 </html>
