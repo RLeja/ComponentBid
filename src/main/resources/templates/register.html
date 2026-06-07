@@ -3,8 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+    <style>
+        label,
+        input {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .alert {
+            padding: 10px 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .field-error {
+            color: #b91c1c;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .input-error {
+            border: 1px solid #dc2626;
+        }
+    </style>
 </head>
 <body>
+<div class="alert alert-error"
+     th:if="${errorMessage}"
+     th:text="${errorMessage}">
+</div>
+
 <form th:action="@{/register}"
       th:object="${registerRequest}"
       method="post">
@@ -13,20 +47,35 @@
     <input
             id="username"
             th:field="*{name}"
+            th:errorclass="input-error"
             placeholder="Name">
+    <div class="field-error"
+         th:if="${#fields.hasErrors('name')}"
+         th:errors="*{name}">
+    </div>
 
     <label for="email">Email:</label>
     <input
             id="email"
             th:field="*{email}"
+            th:errorclass="input-error"
             placeholder="Email">
+    <div class="field-error"
+         th:if="${#fields.hasErrors('email')}"
+         th:errors="*{email}">
+    </div>
 
     <label for="password">Password:</label>
     <input
             id="password"
             type="password"
             th:field="*{password}"
+            th:errorclass="input-error"
             placeholder="Password">
+    <div class="field-error"
+         th:if="${#fields.hasErrors('password')}"
+         th:errors="*{password}">
+    </div>
 
     <button type="submit">
         Register

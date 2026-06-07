@@ -13,13 +13,15 @@ import java.util.List;
 @Getter
 @Setter
 public class RegisterRequest {
-    @NotBlank
+    @NotBlank(message = "Name is required.")
+    @Size(max = 100, message = "Name must be 100 characters or less.")
     private String name;
 
-    @Email
-    @NotBlank
+    @Email(message = "Enter a valid email address.")
+    @NotBlank(message = "Email is required.")
     private String email;
 
-    @Size(min = 6)
+    @NotBlank(message = "Password is required.")
+    @Size(min = 6, message = "Password must be at least 6 characters.")
     private String password;
 }

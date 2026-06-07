@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,13 +32,34 @@ public class AuthController {
     public String register(
             @Valid
             @ModelAttribute RegisterRequest request,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute(
+                    "errorMessage",
+                    "Please fix the highlighted registration fields."
+            );
+
             return "register";
         }
 
-        userService.register(request);
+        try {
+            userService.register(request);
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            model.addAttribute(
+                    "errorMessage",
+                    exception.getMessage()
+            );
+
+            return "register";
+        }
+
+        redirectAttributes.addFlashAttribute(
+                "successMessage",
+                "Registration successful. You can log in now."
+        );
 
         return "redirect:/login";
     }

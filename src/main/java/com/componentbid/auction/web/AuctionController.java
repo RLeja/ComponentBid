@@ -8,6 +8,7 @@ import com.componentbid.auction.repository.ManufacturerRepository;
 import com.componentbid.auction.service.AuctionService;
 import com.componentbid.bid.dto.BidCreateRequest;
 import com.componentbid.bid.repository.BidRepository;
+import com.componentbid.review.dto.ReviewCreateRequest;
 import com.componentbid.review.service.ReviewService;
 import com.componentbid.user.entity.CustomUserDetails;
 import com.componentbid.user.entity.User;
@@ -84,10 +85,19 @@ public class AuctionController {
                 bidRepository.findByAuction_IdOrderBySumDesc(id)
         );
 
-        model.addAttribute(
-                "bidCreateRequest",
-                new BidCreateRequest()
-        );
+        if (!model.containsAttribute("bidCreateRequest")) {
+            model.addAttribute(
+                    "bidCreateRequest",
+                    new BidCreateRequest()
+            );
+        }
+
+        if (!model.containsAttribute("reviewCreateRequest")) {
+            model.addAttribute(
+                    "reviewCreateRequest",
+                    new ReviewCreateRequest()
+            );
+        }
 
         return "auction-details";
     }
@@ -101,15 +111,36 @@ public class AuctionController {
             CustomUserDetails currentUser) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("categories", categoryRepository.findAll());
-            model.addAttribute("manufacturers", manufacturerRepository.findAll());
-            model.addAttribute("conditions", conditionRepository.findAll());
+            populateCreateFormOptions(model);
+            model.addAttribute(
+                    "errorMessage",
+                    "Please fix the highlighted auction fields."
+            );
 
             return "create-auction";
         }
 
-        UUID auctionId = auctionService.createAuction(request, currentUser.getUser().getId());
+        try {
+            UUID auctionId = auctionService.createAuction(
+                    request,
+                    currentUser.getUser().getId()
+            );
 
-        return "redirect:/auctions/" + auctionId;
+            return "redirect:/auctions/" + auctionId;
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            populateCreateFormOptions(model);
+            model.addAttribute(
+                    "errorMessage",
+                    exception.getMessage()
+            );
+
+            return "create-auction";
+        }
+    }
+
+    private void populateCreateFormOptions(Model model) {
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("manufacturers", manufacturerRepository.findAll());
+        model.addAttribute("conditions", conditionRepository.findAll());
     }
 }

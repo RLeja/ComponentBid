@@ -31,7 +31,13 @@ public class AuctionService implements IAuctionService {
 
         if(request.getStartDate().isBefore(LocalDateTime.now()) || request.getEndDate().isBefore(LocalDateTime.now())){
             throw new IllegalArgumentException(
-                    "Both start and end dates must be later that current date."
+                    "Both start and end dates must be later than current date."
+            );
+        }
+
+        if (!request.getEndDate().isAfter(request.getStartDate())) {
+            throw new IllegalArgumentException(
+                    "End date must be after start date."
             );
         }
 

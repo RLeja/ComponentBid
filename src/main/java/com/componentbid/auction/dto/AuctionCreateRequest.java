@@ -2,6 +2,8 @@ package com.componentbid.auction.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,30 +15,33 @@ import java.util.UUID;
 @Setter
 @Getter
 public class AuctionCreateRequest {
-    @NotBlank
+    @NotBlank(message = "Title is required.")
+    @Size(max = 255, message = "Title must be 255 characters or less.")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "Description is required.")
+    @Size(max = 2000, message = "Description must be 2000 characters or less.")
     private String description;
 
-    @NotNull
+    @NotNull(message = "Category is required.")
     private UUID categoryId;
 
-    @NotNull
+    @NotNull(message = "Manufacturer is required.")
     private UUID manufacturerId;
 
-    @NotNull
+    @NotNull(message = "Condition is required.")
     private UUID conditionId;
 
-    @NotNull
+    @NotNull(message = "Starting price is required.")
+    @DecimalMin(value = "0.01", message = "Starting price must be at least 0.01.")
     private BigDecimal startPrice;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @NotNull
+    @NotNull(message = "Start date is required.")
     private LocalDateTime startDate;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @NotNull
+    @NotNull(message = "End date is required.")
     private LocalDateTime endDate;
 
 //    @NotNull

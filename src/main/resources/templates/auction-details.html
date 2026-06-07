@@ -3,8 +3,47 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Auction Details</title>
+    <style>
+        .alert {
+            padding: 10px 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .field-error {
+            color: #b91c1c;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .input-error {
+            border: 1px solid #dc2626;
+        }
+    </style>
 </head>
 <body>
+
+<div class="alert alert-success"
+     th:if="${successMessage}"
+     th:text="${successMessage}">
+</div>
+
+<div class="alert alert-error"
+     th:if="${errorMessage}"
+     th:text="${errorMessage}">
+</div>
 
 <h1 th:text="${auction.title}"></h1>
 
@@ -65,8 +104,14 @@
                 id="sum"
                 type="number"
                 step="0.01"
+                min="0.01"
                 th:field="*{sum}"
+                th:errorclass="input-error"
                 required>
+        <div class="field-error"
+             th:if="${#fields.hasErrors('sum')}"
+             th:errors="*{sum}">
+        </div>
 
         <button type="submit">
             Place Bid
@@ -86,20 +131,33 @@
     <h3>Review Seller</h3>
 
     <form th:action="@{/auctions/{id}/reviews(id=${auction.id})}"
+          th:object="${reviewCreateRequest}"
           method="post">
 
         <label for="rating">Rating</label>
 
         <input id="rating"
                type="number"
-               min="0"
+               min="1"
                max="5"
-               name="rating"
+               th:field="*{rating}"
+               th:errorclass="input-error"
                required>
+        <div class="field-error"
+             th:if="${#fields.hasErrors('rating')}"
+             th:errors="*{rating}">
+        </div>
 
         <label for="comment">Comment</label>
 
-        <textarea id="comment" name="comment"></textarea>
+        <textarea id="comment"
+                  th:field="*{comment}"
+                  th:errorclass="input-error">
+        </textarea>
+        <div class="field-error"
+             th:if="${#fields.hasErrors('comment')}"
+             th:errors="*{comment}">
+        </div>
 
         <button type="submit">
             Submit Review
