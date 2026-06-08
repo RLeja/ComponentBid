@@ -178,7 +178,7 @@
                 <th>Time</th>
             </tr>
 
-            <tr th:each="bid : ${bids}">
+            <tr th:each="bid : ${auction.bids}">
                 <td>
                     <a th:href="@{/users/{id}(id=${bid.bidder.id})}"
                        th:text="${bid.bidder.name}">
