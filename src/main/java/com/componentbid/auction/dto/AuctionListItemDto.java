@@ -18,5 +18,6 @@ public class AuctionListItemDto {
     private String conditionName;
     private String manufacturerName;
     private BigDecimal startPrice;
+    private String currentStatus;
     private String imageUrl;
 }

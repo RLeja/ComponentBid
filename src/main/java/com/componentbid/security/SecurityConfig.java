@@ -68,7 +68,8 @@ public class SecurityConfig {
                                 HttpMethod.GET,
                                 "/auctions",
                                 "/auctions/*",
-                                "/users/*"
+                                "/users/*",
+                                "/files/*"
                         ).permitAll()
 
                         .requestMatchers(

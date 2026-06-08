@@ -1,7 +1,7 @@
 package com.componentbid.user.web;
 
 import com.componentbid.user.dto.RegisterRequest;
-import com.componentbid.user.service.UserService;
+import com.componentbid.user.service.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserService userService;
+    private final IUserService userService;
 
     @GetMapping("/register")
     public String registerPage(Model model) {

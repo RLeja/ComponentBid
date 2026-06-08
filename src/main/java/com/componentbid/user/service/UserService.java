@@ -1,16 +1,18 @@
 package com.componentbid.user.service;
 
 import com.componentbid.review.repository.ReviewRepository;
+import com.componentbid.user.dto.UserDto;
+import com.componentbid.user.dto.UserProfileDto;
 import com.componentbid.user.dto.UserProfileUpdateRequest;
 import com.componentbid.user.entity.Role;
 import com.componentbid.user.entity.UserRole;
+import com.componentbid.user.mapper.UserMapper;
 import com.componentbid.user.repository.RoleRepository;
 import com.componentbid.user.repository.UserRepository;
 import com.componentbid.user.dto.RegisterRequest;
 import com.componentbid.user.entity.User;
 import com.componentbid.user.entity.UserStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,6 @@ import java.util.UUID;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
-    private final ReviewRepository reviewRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -55,19 +56,24 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found!"));
-    }
-    @Override
-    public User getById(UUID id) {
-        return userRepository.findById(id)
-                .orElseThrow();
+    public UserDto get(UUID id) {
+        User user =  userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return UserMapper.projectUser(user);
     }
 
     @Override
-    public User updateProfile(UUID id, UserProfileUpdateRequest request) {
-        User user = getById(id);
+    public UserProfileDto getProfile(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return UserMapper.projectProfile(user);
+    }
+
+    @Override
+    public void updateProfile(UUID id, UserProfileUpdateRequest request) {
+        User user = userRepository.getReferenceById(id);
 
         userRepository.findByEmail(request.getEmail())
                 .filter(existingUser -> !existingUser.getId().equals(id))
@@ -78,6 +84,6 @@ public class UserService implements IUserService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 }

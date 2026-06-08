@@ -2,8 +2,7 @@ package com.componentbid.user.web;
 
 import com.componentbid.user.dto.UserProfileUpdateRequest;
 import com.componentbid.user.entity.CustomUserDetails;
-import com.componentbid.user.entity.User;
-import com.componentbid.user.service.UserService;
+import com.componentbid.user.service.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final IUserService userService;
 
     @GetMapping("/{id}")
     public String profile(
@@ -33,32 +32,9 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetails currentUser,
             Model model) {
 
-        User user = userService.getById(id);
+        var userProfile = userService.getProfile(id);
 
-        model.addAttribute(
-                "user",
-                user
-        );
-
-        model.addAttribute(
-                "auctions",
-                user.getAuctions()
-        );
-
-        model.addAttribute(
-                "bids",
-                user.getBids()
-        );
-
-        model.addAttribute(
-                "writtenReviews",
-                user.getWrittenReviews()
-        );
-
-        model.addAttribute(
-                "receivedReviews",
-                user.getReceivedReviews()
-        );
+        model.addAttribute("profile", userProfile);
 
         model.addAttribute(
                 "isOwnProfile",
@@ -83,7 +59,7 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetails currentUser,
             Model model) {
 
-        User user = userService.getById(currentUser.getUser().getId());
+        var user = userService.get(currentUser.getUser().getId());
 
         if (!model.containsAttribute("profileUpdateRequest")) {
             UserProfileUpdateRequest request = new UserProfileUpdateRequest();

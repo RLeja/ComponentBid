@@ -2,6 +2,7 @@ package com.componentbid.auction.mapper;
 
 import com.componentbid.auction.dto.AuctionCreateRequest;
 import com.componentbid.auction.dto.AuctionDetailsDto;
+import com.componentbid.auction.dto.AuctionPreviewDto;
 import com.componentbid.auction.dto.AuctionListItemDto;
 import com.componentbid.auction.entity.Auction;
 import com.componentbid.auction.entity.Category;
@@ -34,10 +35,10 @@ public class AuctionMapper {
                             .toList()
                 )
                 .bids(
-                        auction.getBids()
-                                .stream()
-                                .map(BidMapper::projectBid)
-                                .toList()
+                    auction.getBids()
+                            .stream()
+                            .map(BidMapper::project)
+                            .toList()
                 )
                 .build();
     }
@@ -51,6 +52,17 @@ public class AuctionMapper {
                 .conditionName(auction.getCondition().getConditionName())
                 .manufacturerName(auction.getManufacturer().getManufacturerName())
                 .startPrice(auction.getStartPrice())
+                .currentStatus(auction.getCurrentStatus().toString())
+                .imageUrl(auction.getImages().isEmpty()
+                        ? null
+                        : "/files/" + auction.getImages().iterator().next().getId())
+                .build();
+    }
+
+    public static AuctionPreviewDto projectPreview(Auction auction) {
+        return AuctionPreviewDto.builder()
+                .id(auction.getId())
+                .title(auction.getTitle())
                 .imageUrl(auction.getImages().isEmpty()
                         ? null
                         : "/files/" + auction.getImages().iterator().next().getId())
