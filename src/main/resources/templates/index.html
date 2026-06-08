@@ -44,9 +44,9 @@
             <select name="categoryId" id="categoryId">
                 <option value="">All Categories</option>
                 <option th:each="category : ${categories}"
-                        th:value="${category.categoryId}"
-                        th:text="${category.categoryName}"
-                        th:selected="${category.categoryId == selectedCategoryId}">
+                        th:value="${category.id}"
+                        th:text="${category.name}"
+                        th:selected="${category.id == filter.categoryId}">
                 </option>
             </select>
         </label>
@@ -56,9 +56,9 @@
             <select name="conditionId" id="conditionId">
                 <option value="">All Conditions</option>
                 <option th:each="condition : ${conditions}"
-                        th:value="${condition.conditionId}"
-                        th:text="${condition.conditionName}"
-                        th:selected="${condition.conditionId == selectedConditionId}">
+                        th:value="${condition.id}"
+                        th:text="${condition.name}"
+                        th:selected="${condition.id == filter.conditionId}">
                 </option>
             </select>
         </label>
@@ -68,9 +68,9 @@
             <select name="manufacturerId" id="manufacturerId">
                 <option value="">All Manufacturers</option>
                 <option th:each="manufacturer : ${manufacturers}"
-                        th:value="${manufacturer.manufacturerId}"
-                        th:text="${manufacturer.manufacturerName}"
-                        th:selected="${manufacturer.manufacturerId == selectedManufacturerId}">
+                        th:value="${manufacturer.id}"
+                        th:text="${manufacturer.name}"
+                        th:selected="${manufacturer.id == filter.manufacturerId}">
                 </option>
             </select>
         </label>
@@ -86,6 +86,8 @@
     <section class="auction-grid" th:unless="${#lists.isEmpty(auctions)}">
         <article class="auction-card" th:each="auction : ${auctions}">
             <a th:href="@{/auctions/{id}(id=${auction.id})}">
+                <img th:src="${auction.imageUrl != null ? auction.imageUrl : 'https://placehold.co/192x144/e5e7eb/475569?text=No+image'}"
+                     alt="Auction image">
                 <h2 th:text="${auction.title}"></h2>
             </a>
 
@@ -94,7 +96,17 @@
             <div class="meta-grid">
                 <p class="meta-item">
                     <span class="meta-label">Category</span>
-                    <span class="meta-value" th:text="${auction.category.getCategoryName()}"></span>
+                    <span class="meta-value" th:text="${auction.categoryName}"></span>
+                </p>
+
+                <p class="meta-item">
+                    <span class="meta-label">Condition</span>
+                    <span class="meta-value" th:text="${auction.conditionName}"></span>
+                </p>
+
+                <p class="meta-item">
+                    <span class="meta-label">Manufacturer</span>
+                    <span class="meta-value" th:text="${auction.manufacturerName}"></span>
                 </p>
 
                 <p class="meta-item">

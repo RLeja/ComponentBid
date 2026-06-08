@@ -2,6 +2,7 @@ package com.componentbid.auction.mapper;
 
 import com.componentbid.auction.dto.AuctionCreateRequest;
 import com.componentbid.auction.dto.AuctionDetailsDto;
+import com.componentbid.auction.dto.AuctionListItemDto;
 import com.componentbid.auction.entity.Auction;
 import com.componentbid.auction.entity.Category;
 import com.componentbid.auction.entity.ItemCondition;
@@ -38,6 +39,21 @@ public class AuctionMapper {
                                 .map(BidMapper::projectBid)
                                 .toList()
                 )
+                .build();
+    }
+
+    public static AuctionListItemDto projectListItem(Auction auction) {
+        return AuctionListItemDto.builder()
+                .id(auction.getId())
+                .title(auction.getTitle())
+                .description(auction.getDescription())
+                .categoryName(auction.getCategory().getCategoryName())
+                .conditionName(auction.getCondition().getConditionName())
+                .manufacturerName(auction.getManufacturer().getManufacturerName())
+                .startPrice(auction.getStartPrice())
+                .imageUrl(auction.getImages().isEmpty()
+                        ? null
+                        : "/files/" + auction.getImages().iterator().next().getId())
                 .build();
     }
 

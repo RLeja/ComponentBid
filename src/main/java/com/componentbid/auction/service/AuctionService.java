@@ -2,24 +2,29 @@ package com.componentbid.auction.service;
 
 import com.componentbid.auction.dto.AuctionCreateRequest;
 import com.componentbid.auction.dto.AuctionDetailsDto;
+import com.componentbid.auction.dto.AuctionFilterRequest;
+import com.componentbid.auction.dto.AuctionListItemDto;
 import com.componentbid.auction.entity.*;
 import com.componentbid.auction.mapper.AuctionMapper;
 import com.componentbid.auction.repository.AuctionRepository;
 import com.componentbid.auction.repository.CategoryRepository;
 import com.componentbid.auction.repository.ItemConditionRepository;
 import com.componentbid.auction.repository.ManufacturerRepository;
+import com.componentbid.auction.specification.AuctionCriteria;
 import com.componentbid.common.dto.ClassifierDto;
 import com.componentbid.file.entity.FileMetadata;
 import com.componentbid.file.service.IFileService;
 import com.componentbid.user.entity.User;
 import com.componentbid.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -86,13 +91,24 @@ public class AuctionService implements IAuctionService {
         return auction.getId();
     }
 
-    public List<Auction> getAllAuctions() {
-        return auctionRepository.findAll();
-    }
-    public List<Auction> getFilteredAuctions(UUID categoryId,
-                                             UUID manufacturerId,
-                                             UUID conditionId){
-        return auctionRepository.findFiltered(categoryId, manufacturerId, conditionId);
+    public Collection<AuctionListItemDto> getAuctions(AuctionFilterRequest filter) {
+
+        Specification<Auction> specification = Specification.allOf();
+
+        if (filter != null){
+            specification = Specification
+                    .allOf(
+                            AuctionCriteria.hasCategory(filter.getCategoryId()),
+                            AuctionCriteria.hasManufacturer(filter.getManufacturerId()),
+                            AuctionCriteria.hasCondition(filter.getConditionId()),
+                            AuctionCriteria.isActive()
+                    );
+        }
+
+        return auctionRepository.findAll(specification)
+                .stream()
+                .map(AuctionMapper::projectListItem)
+                .toList();
     }
 
     public AuctionDetailsDto getAuctionDetails(UUID auctionId) {
