@@ -38,7 +38,6 @@ public class AuctionCreateRequest {
     @DecimalMin(value = "0.01", message = "Starting price must be at least 0.01.")
     private BigDecimal startPrice;
 
-    @NotNull(message = "Condition is required.")
     private List<MultipartFile> images;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

@@ -16,6 +16,12 @@
             <span>ComponentBid</span>
         </a>
         <nav class="nav-actions">
+            <a class="button" th:if="${canEdit}"
+               th:href="@{/auctions/{id}/edit(id=${auction.id})}">Edit</a>
+            <form th:if="${canEdit}"
+                  th:action="@{/auctions/{id}/delete(id=${auction.id})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
             <a class="button secondary" th:href="@{/}">Back to Auctions</a>
         </nav>
     </header>
@@ -51,17 +57,17 @@
                 <div class="meta-grid">
                     <p class="meta-item">
                         <span class="meta-label">Category</span>
-                        <span class="meta-value" th:text="${auction.categoryName}"></span>
+                        <span class="meta-value" th:text="${auction.category.name}"></span>
                     </p>
 
                     <p class="meta-item">
                         <span class="meta-label">Manufacturer</span>
-                        <span class="meta-value" th:text="${auction.manufacturerName}"></span>
+                        <span class="meta-value" th:text="${auction.manufacturer.name}"></span>
                     </p>
 
                     <p class="meta-item">
                         <span class="meta-label">Condition</span>
-                        <span class="meta-value" th:text="${auction.conditionName}"></span>
+                        <span class="meta-value" th:text="${auction.condition.name}"></span>
                     </p>
 
                     <p class="meta-item">
@@ -104,24 +110,20 @@
 
                     <label class="span-2" for="sum">
                         Bid Sum
-                        <input
-                                id="sum"
-                                type="number"
-                                step="0.01"
-                                min="0.01"
-                                th:field="*{sum}"
-                                th:errorclass="input-error"
-                                required>
+                        <input id="sum"
+                               type="number"
+                               step="0.01"
+                               min="0.01"
+                               th:field="*{sum}"
+                               th:errorclass="input-error"
+                               required>
                         <span class="field-error"
                               th:if="${#fields.hasErrors('sum')}"
                               th:errors="*{sum}">
                         </span>
                     </label>
 
-                    <button class="span-2" type="submit">
-                        Place Bid
-                    </button>
-
+                    <button class="span-2" type="submit">Place Bid</button>
                 </form>
             </div>
 
@@ -159,10 +161,7 @@
                         </span>
                     </label>
 
-                    <button class="span-2" type="submit">
-                        Submit Review
-                    </button>
-
+                    <button class="span-2" type="submit">Submit Review</button>
                 </form>
             </div>
         </aside>

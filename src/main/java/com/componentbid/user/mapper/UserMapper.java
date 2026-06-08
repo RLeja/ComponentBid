@@ -6,7 +6,6 @@ import com.componentbid.review.mapper.ReviewMapper;
 import com.componentbid.user.dto.UserDto;
 import com.componentbid.user.dto.UserProfileDto;
 import com.componentbid.user.entity.User;
-import org.springframework.stereotype.Component;
 
 public class UserMapper {
     public static UserDto projectUser(User user) {

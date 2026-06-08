@@ -1,6 +1,7 @@
 package com.componentbid.auction.web;
 
 import com.componentbid.auction.dto.AuctionCreateRequest;
+import com.componentbid.auction.dto.AuctionUpdateRequest;
 import com.componentbid.auction.service.IAuctionService;
 import com.componentbid.bid.dto.BidCreateRequest;
 import com.componentbid.review.dto.ReviewCreateRequest;
@@ -34,18 +35,38 @@ public class AuctionController {
         return "auction/create";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable UUID id, @AuthenticationPrincipal CustomUserDetails currentUser, Model model) {
+
+        model.addAttribute("auction", auctionService.getAuctionEditForm(id));
+        model.addAttribute("auctionId", id);
+        populateCreateFormOptions(model);
+
+        return "auction/edit";
+    }
+
     @GetMapping("/{id}")
     public String getDetails(@PathVariable UUID id, Model model, @AuthenticationPrincipal CustomUserDetails currentUser) {
 
         var auctionDetails = auctionService.getAuctionDetails(id);
 
         model.addAttribute("auction", auctionDetails);
+        populateCreateFormOptions(model);
 
         model.addAttribute("bidCreateRequest", new BidCreateRequest());
         model.addAttribute("reviewCreateRequest", new ReviewCreateRequest());
 
-        var canReview = currentUser != null && reviewService.canReview(id, currentUser.getUser().getId());
-        model.addAttribute("canReview", canReview);
+        if (currentUser != null) {
+            var canReview = reviewService.canReview(id, currentUser.getUser().getId());
+            model.addAttribute("canReview", canReview);
+
+            boolean isAdmin = currentUser.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+            var canEdit = isAdmin || auctionDetails.getSeller().getId().equals(currentUser.getUser().getId());
+            model.addAttribute("canEdit", canEdit);
+        }
 
         return "auction/details";
     }
@@ -82,6 +103,51 @@ public class AuctionController {
 
             return "auction/create";
         }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/edit")
+    public String editAuction(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal CustomUserDetails currentUser,
+            @Valid @ModelAttribute("auction") AuctionUpdateRequest request,
+            BindingResult bindingResult,
+            Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("auctionId", id);
+            populateCreateFormOptions(model);
+
+            return "auction/edit";
+        }
+
+        boolean isAdmin = currentUser.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        try {
+            auctionService.updateAuction(id, request, currentUser.getUser().getId(), isAdmin);
+
+            return "redirect:/auctions/" + id;
+
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("auctionId", id);
+            populateCreateFormOptions(model);
+
+            return "auction/edit";
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/delete")
+    public String deleteAuction(@PathVariable UUID id, @AuthenticationPrincipal CustomUserDetails currentUser) {
+
+        boolean isAdmin = currentUser.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        auctionService.deleteAuction(id, currentUser.getUser().getId(), isAdmin);
+
+        return "redirect:/";
     }
 
     private void populateCreateFormOptions(Model model) {

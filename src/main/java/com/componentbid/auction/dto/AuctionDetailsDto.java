@@ -1,6 +1,7 @@
 package com.componentbid.auction.dto;
 
 import com.componentbid.bid.dto.BidDto;
+import com.componentbid.common.dto.ClassifierDto;
 import com.componentbid.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +20,9 @@ public class AuctionDetailsDto {
     private String title;
     private String description;
 
-    private String categoryName;
-    private String manufacturerName;
-    private String conditionName;
+    private ClassifierDto category;
+    private ClassifierDto manufacturer;
+    private ClassifierDto condition;
 
     private BigDecimal startPrice;
     private LocalDateTime startDate;
