@@ -9,4 +9,6 @@ public interface IReviewService {
             UUID auctionId,
             UUID reviewerId,
             ReviewCreateRequest request);
+
+    boolean canReview(UUID auctionId, UUID userId);
 }

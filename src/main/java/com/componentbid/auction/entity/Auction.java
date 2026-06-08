@@ -2,8 +2,7 @@ package com.componentbid.auction.entity;
 
 import com.componentbid.file.entity.FileMetadata;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.math.BigDecimal;
@@ -18,6 +17,9 @@ import com.componentbid.bid.entity.Bid;
 
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "auctions")
 public class Auction {
@@ -42,9 +44,6 @@ public class Auction {
     @ManyToOne
     @JoinColumn(name = "condition_id", nullable = false)
     private ItemCondition condition;
-
-//    @Column(nullable = false)
-//    private String status;
 
     @Column(nullable = false)
     private BigDecimal startPrice;

@@ -8,6 +8,7 @@ import com.componentbid.auction.repository.AuctionRepository;
 import com.componentbid.auction.repository.CategoryRepository;
 import com.componentbid.auction.repository.ItemConditionRepository;
 import com.componentbid.auction.repository.ManufacturerRepository;
+import com.componentbid.common.dto.ClassifierDto;
 import com.componentbid.file.entity.FileMetadata;
 import com.componentbid.file.service.IFileService;
 import com.componentbid.user.entity.User;
@@ -52,38 +53,20 @@ public class AuctionService implements IAuctionService {
 
         Category category = categoryRepository
                 .findById(request.getCategoryId())
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category."));
 
         Manufacturer manufacturer = manufacturerRepository
                 .findById(request.getManufacturerId())
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("Invalid manufacturer."));
 
         ItemCondition condition = conditionRepository
                 .findById(request.getConditionId())
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("Invalid condition."));
 
         User seller = userRepository.findById(userId)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user."));
 
-        Auction auction = new Auction();
-
-        auction.setTitle(request.getTitle());
-        auction.setDescription(request.getDescription());
-        auction.setStartPrice(request.getStartPrice());
-        //auction.setImageUrl(request.getImageUrl());
-
-        auction.setCategory(category);
-        auction.setManufacturer(manufacturer);
-        auction.setCondition(condition);
-
-        auction.setUser(seller);
-
-        //auction.setStatus(String.valueOf(AuctionStatus.ACTIVE));
-
-        auction.setCreatedAt(LocalDateTime.now());
-
-        auction.setStartDate(request.getStartDate());
-        auction.setEndDate(request.getEndDate());
+        var auction = AuctionMapper.map(request, seller, category, manufacturer, condition);
 
         List<FileMetadata> images = new ArrayList<>();
 
@@ -118,5 +101,23 @@ public class AuctionService implements IAuctionService {
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
 
         return AuctionMapper.projectDetails(auction);
+    }
+
+    public List<ClassifierDto> getCategories() {
+        return categoryRepository.findAll().stream()
+                .map(c -> new ClassifierDto(c.getCategoryId(), c.getCategoryName()))
+                .toList();
+    }
+
+    public List<ClassifierDto> getManufacturers() {
+        return manufacturerRepository.findAll().stream()
+                .map(m -> new ClassifierDto(m.getManufacturerId(), m.getManufacturerName()))
+                .toList();
+    }
+
+    public List<ClassifierDto> getConditions() {
+        return conditionRepository.findAll().stream()
+                .map(c -> new ClassifierDto(c.getConditionId(), c.getConditionName()))
+                .toList();
     }
 }

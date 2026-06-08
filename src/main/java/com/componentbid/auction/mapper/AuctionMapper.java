@@ -1,9 +1,16 @@
 package com.componentbid.auction.mapper;
 
+import com.componentbid.auction.dto.AuctionCreateRequest;
 import com.componentbid.auction.dto.AuctionDetailsDto;
 import com.componentbid.auction.entity.Auction;
+import com.componentbid.auction.entity.Category;
+import com.componentbid.auction.entity.ItemCondition;
+import com.componentbid.auction.entity.Manufacturer;
 import com.componentbid.bid.mapper.BidMapper;
+import com.componentbid.user.entity.User;
 import com.componentbid.user.mapper.UserMapper;
+
+import java.time.LocalDateTime;
 
 public class AuctionMapper {
     public static AuctionDetailsDto projectDetails(Auction auction) {
@@ -31,6 +38,27 @@ public class AuctionMapper {
                                 .map(BidMapper::projectBid)
                                 .toList()
                 )
+                .build();
+    }
+
+    public static Auction map(
+            AuctionCreateRequest request,
+            User seller,
+            Category category,
+            Manufacturer manufacturer,
+            ItemCondition condition)
+    {
+        return Auction.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .startPrice(request.getStartPrice())
+                .category(category)
+                .manufacturer(manufacturer)
+                .condition(condition)
+                .user(seller)
+                .createdAt(LocalDateTime.now())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
                 .build();
     }
 }

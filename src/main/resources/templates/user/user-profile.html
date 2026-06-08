@@ -9,13 +9,13 @@
 <body>
 <main class="app-shell">
     <header class="topbar">
-        <a class="brand" th:href="@{/}">
+        <a class="brand" th:href="@{/static}">
             <span class="brand-mark">CB</span>
             <span>ComponentBid</span>
         </a>
         <nav class="nav-actions">
             <a class="button" th:if="${isOwnProfile}" th:href="@{/users/profile/edit}">Edit Profile</a>
-            <a class="button secondary" th:href="@{/}">Back to Auctions</a>
+            <a class="button secondary" th:href="@{/static}">Back to Auctions</a>
         </nav>
     </header>
 

@@ -25,7 +25,7 @@ public class AuthController {
                 new RegisterRequest()
         );
 
-        return "register";
+        return "auth/register";
     }
 
     @PostMapping("/register")
@@ -42,7 +42,7 @@ public class AuthController {
                     "Please fix the highlighted registration fields."
             );
 
-            return "register";
+            return "auth/register";
         }
 
         try {
@@ -53,7 +53,7 @@ public class AuthController {
                     exception.getMessage()
             );
 
-            return "register";
+            return "auth/register";
         }
 
         redirectAttributes.addFlashAttribute(
@@ -65,6 +65,6 @@ public class AuthController {
     }
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "auth/login";
     }
 }

@@ -76,12 +76,6 @@
             </span>
         </label>
 
-<!--    <label for="imageUrl">Picture URL</label>-->
-<!--    <input id="imageUrl"-->
-<!--           type="url"-->
-<!--           th:field="*{imageUrl}"-->
-<!--           placeholder="https://example.com/component.jpg">-->
-
         <label class="span-2">
             Images
             <input type="file"
@@ -97,8 +91,8 @@
                     th:errorclass="input-error">
                 <option value="">Select Category</option>
                 <option th:each="category : ${categories}"
-                        th:value="${category.categoryId}"
-                        th:text="${category.categoryName}">
+                        th:value="${category.id}"
+                        th:text="${category.name}">
                 </option>
             </select>
             <span class="field-error"
@@ -114,8 +108,8 @@
                     th:errorclass="input-error">
                 <option value="">Select Manufacturer</option>
                 <option th:each="manufacturer : ${manufacturers}"
-                        th:value="${manufacturer.manufacturerId}"
-                        th:text="${manufacturer.manufacturerName}">
+                        th:value="${manufacturer.id}"
+                        th:text="${manufacturer.name}">
                 </option>
             </select>
             <span class="field-error"
@@ -131,8 +125,8 @@
                     th:errorclass="input-error">
                 <option value="">Select Condition</option>
                 <option th:each="condition : ${conditions}"
-                        th:value="${condition.conditionId}"
-                        th:text="${condition.conditionName}">
+                        th:value="${condition.id}"
+                        th:text="${condition.name}">
                 </option>
             </select>
             <span class="field-error"

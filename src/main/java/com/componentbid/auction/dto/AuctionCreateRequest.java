@@ -48,7 +48,4 @@ public class AuctionCreateRequest {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @NotNull(message = "End date is required.")
     private LocalDateTime endDate;
-
-//    @NotNull
-//    private UUID userId;
 }

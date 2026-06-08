@@ -66,7 +66,7 @@ public class UserController {
                         Objects.equals(currentUser.getUser().getId(), id)
         );
 
-        return "user-profile";
+        return "user/user-profile";
     }
 
     @GetMapping("/profile")
@@ -93,7 +93,7 @@ public class UserController {
             model.addAttribute("profileUpdateRequest", request);
         }
 
-        return "edit-profile";
+        return "user/edit-profile";
     }
 
     @PostMapping("/profile/edit")
@@ -110,7 +110,7 @@ public class UserController {
                     "Please fix the highlighted profile fields."
             );
 
-            return "edit-profile";
+            return "user/edit-profile";
         }
 
         try {
@@ -124,7 +124,7 @@ public class UserController {
                     exception.getMessage()
             );
 
-            return "edit-profile";
+            return "user/edit-profile";
         }
 
         currentUser.getUser().setName(profileUpdateRequest.getName());
