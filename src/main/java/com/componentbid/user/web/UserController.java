@@ -1,10 +1,13 @@
 package com.componentbid.user.web;
 
+import com.componentbid.user.dto.ChangePasswordRequest;
 import com.componentbid.user.dto.UserProfileUpdateRequest;
 import com.componentbid.user.entity.CustomUserDetails;
 import com.componentbid.user.service.IUserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -112,5 +115,61 @@ public class UserController {
         );
 
         return "redirect:/users/" + currentUser.getUser().getId();
+    }
+
+    @PostMapping("/profile/delete")
+    @PreAuthorize("isAuthenticated()")
+    public String deleteAccount(@AuthenticationPrincipal CustomUserDetails currentUser, HttpServletRequest request) throws Exception {
+
+        userService.delete(currentUser.getUser().getId());
+        request.logout();
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/profile/change-password")
+    @PreAuthorize("isAuthenticated()")
+    public String changePasswordPage(Model model) {
+        model.addAttribute("changePasswordRequest", new ChangePasswordRequest());
+
+        return "user/change-password";
+    }
+
+    @PostMapping("/profile/change-password")
+    @PreAuthorize("isAuthenticated()")
+    public String changePassword(
+            @AuthenticationPrincipal CustomUserDetails currentUser,
+            @Valid @ModelAttribute ChangePasswordRequest changePasswordRequest,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errorMessage", "Please fix the highlighted fields.");
+            return "user/change-password";
+        }
+
+        try {
+            userService.changePassword(currentUser.getUser().getId(), changePasswordRequest);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "user/change-password";
+        }
+
+        redirectAttributes.addFlashAttribute("successMessage", "Password changed.");
+
+        return "redirect:/users/" + currentUser.getUser().getId();
+    }
+
+    @PostMapping("/{id}/ban")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String banUser(
+            @PathVariable UUID id,
+            RedirectAttributes redirectAttributes) {
+
+        userService.banUser(id);
+        redirectAttributes.addFlashAttribute("successMessage", "User banned.");
+
+        return "redirect:/users/" + id;
     }
 }

@@ -1,6 +1,7 @@
 package com.componentbid.user.entity;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -30,7 +31,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .toList();
     }
 
     @Override
@@ -38,4 +41,6 @@ public class CustomUserDetails implements UserDetails {
         return user.getPasswordHash();
     }
 
+    @Override
+    public boolean isEnabled() {return user.getStatus() == UserStatus.ACTIVE; }
 }

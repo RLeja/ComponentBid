@@ -1,15 +1,11 @@
 package com.componentbid.user.service;
 
-import com.componentbid.review.repository.ReviewRepository;
-import com.componentbid.user.dto.UserDto;
-import com.componentbid.user.dto.UserProfileDto;
-import com.componentbid.user.dto.UserProfileUpdateRequest;
+import com.componentbid.user.dto.*;
 import com.componentbid.user.entity.Role;
 import com.componentbid.user.entity.UserRole;
 import com.componentbid.user.mapper.UserMapper;
 import com.componentbid.user.repository.RoleRepository;
 import com.componentbid.user.repository.UserRepository;
-import com.componentbid.user.dto.RegisterRequest;
 import com.componentbid.user.entity.User;
 import com.componentbid.user.entity.UserStatus;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +80,36 @@ public class UserService implements IUserService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
 
+        userRepository.save(user);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void changePassword(UUID id, ChangePasswordRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void banUser(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setStatus(UserStatus.DISABLED);
         userRepository.save(user);
     }
 }

@@ -1,6 +1,7 @@
 package com.componentbid.auction.entity;
 
 import com.componentbid.file.entity.FileMetadata;
+import com.componentbid.review.entity.Review;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -65,8 +66,11 @@ public class Auction {
     )
     private Collection<FileMetadata> images;
 
-    @OneToMany(mappedBy = "auction")
+    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL)
     private List<Bid> bids = new ArrayList<>();
+
+    @OneToOne(mappedBy = "auction", cascade = CascadeType.ALL)
+    private Review review;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
