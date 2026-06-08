@@ -1,16 +1,11 @@
 package com.componentbid.home;
 
 import com.componentbid.auction.dto.AuctionFilterRequest;
-import com.componentbid.auction.entity.Auction;
-import com.componentbid.auction.repository.CategoryRepository;
-import com.componentbid.auction.repository.ItemConditionRepository;
-import com.componentbid.auction.repository.ManufacturerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.componentbid.auction.service.AuctionService;
 
 import java.util.UUID;

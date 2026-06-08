@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+
+<main class="app-shell">
+    <header class="topbar">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">CB</span>
+            <span>ComponentBid</span>
+        </a>
+    </header>
+
+    <div class="panel">
+        <h1>Something went wrong</h1>
+        <p class="muted">An unexpected error occurred. Please try again later.</p>
+        <a class="button" th:href="@{/}">Go home</a>
+    </div>
+</main>
+
+</body>
+</html>
